@@ -1,8 +1,5 @@
-from receiver.repository.ReceiverRepositoryImpl import ReceiverRepositoryImpl
 from server_socket.repository.ServerSocketRepositoryImpl import ServerSocketRepositoryImpl
 from server_socket.service.ServerSocketService import ServerSocketService
-from task_manage.repository.TaskManageRepositoryImpl import TaskManageRepositoryImpl
-from transmitter.repository.TransmitterRepositoryImpl import TransmitterRepositoryImpl
 
 
 class ServerSocketServiceImpl(ServerSocketService):
@@ -43,23 +40,11 @@ class ServerSocketServiceImpl(ServerSocketService):
     def acceptClientSocket(self, queue):
         clientSocket, clientAddress = self.__serverSocketRepository.acceptClientSocket()
 
-        if clientSocket is not None:
-            taskManageRepository = TaskManageRepositoryImpl.getInstance()
-            transmitterRepository = TransmitterRepositoryImpl.getInstance()
-            receiverRepository = ReceiverRepositoryImpl.getInstance()
+        if clientSocket is None:
+            return
 
-            taskManageRepository.createTask(
-                target=transmitterRepository.transmitCommand,
-                args=(clientSocket,)
-            )
-
-            taskManageRepository.createTask(
-                target=receiverRepository.receiveCommand,
-                args=(clientSocket,)
-            )
-
-            print("clientSocket: {}, clientAddress: {}".format(clientSocket, clientAddress))
-            queue.put((clientSocket, clientAddress))
+        print("clientSocket: {}, clientAddress: {}".format(clientSocket, clientAddress))
+        queue.put((clientSocket, clientAddress))
 
 
 
