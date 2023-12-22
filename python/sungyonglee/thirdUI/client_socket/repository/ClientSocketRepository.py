@@ -13,7 +13,3 @@ class ClientSocketRepository(abc.ABC):
     @abc.abstractmethod
     def setBlockingOperation(self):
         pass
-
-    @abc.abstractmethod
-    def getClientSocket(self):
-        pass

@@ -55,7 +55,6 @@ class ClientSocketRepositoryImpl(ClientSocketRepository):
         socketObject = self.__clientSocket.getSocket()
         socketObject.setblocking(False)
 
-    def getClientSocket(self):
-        return self.__clientSocket
+
 
 

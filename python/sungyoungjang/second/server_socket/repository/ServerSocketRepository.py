@@ -21,11 +21,3 @@ class ServerSocketRepository(abc.ABC):
     @abc.abstractmethod
     def acceptClientSocket(self):
         pass
-
-    @abc.abstractmethod
-    def getServerSocket(self):
-        pass
-
-    @abc.abstractmethod
-    def getClientSocketList(self):
-        pass

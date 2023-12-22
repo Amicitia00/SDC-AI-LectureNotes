@@ -1,11 +1,9 @@
 import abc
 
-
 class ServerSocketService(abc.ABC):
     @abc.abstractmethod
     def createServerSocket(self, host, port):
         pass
-
     @abc.abstractmethod
     def setSocketOption(self, apiControlLevel, OptionName):
         pass
@@ -23,6 +21,5 @@ class ServerSocketService(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def acceptClientSocket(self, queue):
+    def acceptClientSocket(self):
         pass
-

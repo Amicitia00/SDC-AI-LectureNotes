@@ -24,7 +24,10 @@ class TransmitterRepositoryImpl(TransmitterRepository):
             cls.__instance = cls()
         return cls.__instance
 
-    def transmitCommand(self, clientSocket):
+    def transmitCommand(self, clientSocketListObject):
+        clientSocketObject = clientSocketListObject[0]
+        clientSocket = clientSocketObject.getClientSocket()
+
         while True:
             try:
                 print("transmitter: 응답 준비")

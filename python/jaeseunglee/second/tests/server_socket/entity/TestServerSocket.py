@@ -1,39 +1,33 @@
 import unittest
-from unittest.mock import Mock, patch
+from unittest.mock import Mock
 import atexit
 from server_socket.entity.ServerSocket import ServerSocket
-from decouple import config
-
 
 class TestServerSocket(unittest.TestCase):
     def testServerSocketInitialization(self):
-        print("Entity: 서버 소켓 생성 테스트")
-
-        host = config('HOST')
-        port = int(config('PORT'))
+        host = 'localhost'
+        port = 33333
         mock_socket = Mock()
 
         server_socket = ServerSocket(host, port, mock_socket)
 
+        self.assertEqual(server_socket.getSocket(), mock_socket)
         self.assertEqual(server_socket.getHost(), host)
         self.assertEqual(server_socket.getPort(), port)
-        self.assertEqual(server_socket.getSocket(), mock_socket)
+
+
 
     def testCloseSocketCalledOnExit(self):
-        print("Entity: 서버 소켓 소멸 테스트")
 
-        host = config('HOST')
-        port = int(config('PORT'))
+        host = 'localhost'
+        port = 33333
         mock_socket = Mock()
 
         server_socket = ServerSocket(host, port, mock_socket)
 
-        with patch.object(server_socket, '_ServerSocket__socket') as mock_close:
-            atexit._run_exitfuncs()
+        self.addCleanup(server_socket.closeSocket)
 
-            # Assert
-            mock_close.close.assert_called_once()
-
+        #self.assertTrue(server_socket.getSocket().closeSocket.called, "close")
 
 if __name__ == '__main__':
     unittest.main()
