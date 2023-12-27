@@ -48,8 +48,23 @@ def registerProtocol():
     )
 
     customProtocolService.registerCustomProtocol(
-        CustomProtocol.ACCOUNT_REGISTER.value,
+        CustomProtocol.ACCOUNT_LOGIN.value,
         accountFormRepository.createAccountLoginForm
+    )
+
+    customProtocolService.registerCustomProtocol(
+        CustomProtocol.ACCOUNT_LOGOUT.value,
+        accountFormRepository.createAccountLogoutForm
+    )
+
+    customProtocolService.registerCustomProtocol(
+        CustomProtocol.ACCOUNT_DELETE.value,
+        accountFormRepository.createAccountDeleteForm
+    )
+
+    customProtocolService.registerCustomProtocol(
+        CustomProtocol.PRODUCT_LIST.value,
+        accountFormRepository.createProductListForm
     )
 
 

@@ -5,6 +5,8 @@ from time import sleep
 
 import sqlalchemy
 
+from account.repository.AccountRepositoryImpl import AccountRepositoryImpl
+from account.repository.SessionRepositoryImpl import SessionRepositoryImpl
 from account.service.AccountServiceImpl import AccountServiceImpl
 from custom_protocol.entity.CustomProtocol import CustomProtocol
 from custom_protocol.service.CustomProtocolServiceImpl import CustomProtocolServiceImpl
@@ -53,6 +55,7 @@ def initTaskManageDomain():
 def initCustomProtocol():
     customProtocolService = CustomProtocolServiceImpl.getInstance()
     accountService = AccountServiceImpl.getInstance()
+    # productService = ProductServiceImpl.getInstance()
 
     print(f"enum value test: {CustomProtocol.ACCOUNT_REGISTER.value}")
     customProtocolService.registerCustomProtocol(
@@ -60,14 +63,45 @@ def initCustomProtocol():
         accountService.registerAccount
     )
 
+    customProtocolService.registerCustomProtocol(
+        CustomProtocol.ACCOUNT_LOGIN.value,
+        accountService.loginAccount
+    )
+
+    customProtocolService.registerCustomProtocol(
+        CustomProtocol.ACCOUNT_LOGOUT.value,
+        accountService.logoutAccount
+    )
+
+    customProtocolService.registerCustomProtocol(
+        CustomProtocol.ACCOUNT_DELETE.value,
+        accountService.deleteAccount
+    )
+
+    # customProtocolService.registerCustomProtocol(
+    #     CustomProtocol.PRODUCT_LIST.value,
+    #     productService.listProduct
+    # )
+
+
+def initAccountDomain():
+    accountRepository = AccountRepositoryImpl()
+    sessionRepository = SessionRepositoryImpl()
+
+    AccountServiceImpl(accountRepository, sessionRepository)
+
 
 def initEachDomain():
     # initMysqlInstance()
     initMysqlInstanceAlternatives()
 
+    initAccountDomain();
+
     initServerSocketDomain()
     initTaskManageDomain()
     initCustomProtocol()
+
+
 
 
 if __name__ == '__main__':

@@ -1,5 +1,6 @@
 import ast
 
+from console_ui.repository.ConsoleUiRepositoryImpl import ConsoleUiRepositoryImpl
 from custom_protocol.entity.CustomProtocol import CustomProtocol
 from request_generator.service.RequestGeneratorService import RequestGeneratorService
 
@@ -12,7 +13,17 @@ class RequestGeneratorServiceImpl(RequestGeneratorService):
         if cls.__instance is None:
             cls.__instance = super().__new__(cls)
 
-            cls.__requestFormGenerationTable[CustomProtocol.ACCOUNT_REGISTER.value] = cls.__instance.generateAccountRegisterRequest
+            cls.__requestFormGenerationTable[
+                CustomProtocol.ACCOUNT_REGISTER.value] = cls.__instance.generateAccountRegisterRequest
+            cls.__requestFormGenerationTable[
+                CustomProtocol.ACCOUNT_LOGIN.value] = cls.__instance.generateAccountLoginRequest
+            cls.__requestFormGenerationTable[
+                CustomProtocol.ACCOUNT_LOGOUT.value] = cls.__instance.generateAccountLogoutRequest
+            cls.__requestFormGenerationTable[
+                CustomProtocol.ACCOUNT_DELETE.value] = cls.__instance.generateAccountDeleteRequest
+
+            cls.__requestFormGenerationTable[
+                CustomProtocol.PRODUCT_LIST.value] = cls.__instance.generateAccountDeleteRequest
 
         return cls.__instance
 
@@ -25,8 +36,9 @@ class RequestGeneratorServiceImpl(RequestGeneratorService):
             cls.__instance = cls()
         return cls.__instance
 
+    # 사실 이 부분은 python Dictionary를 사용하여 개선하는 것이 더 좋음
     def findRequestGenerator(self, protocolNumber):
-        print("request generator를 찾아옵니다")
+        print("RequestGeneratorService: request generator를 찾아옵니다")
         if self.__requestFormGenerationTable[protocolNumber] is not None:
             return self.__requestFormGenerationTable[protocolNumber]
 
@@ -34,6 +46,7 @@ class RequestGeneratorServiceImpl(RequestGeneratorService):
             print(f"이 프로토콜 번호({protocolNumber}) 를 처리 할 수 있는 함수가 없습니다.")
 
     def generateAccountRegisterRequest(self, arguments):
+        print("RequestGeneratorService: register form")
         print(f"arguments의 타입: {type(arguments)}")
         print(f"지금부터 request를 생성합니다: {arguments}")
 
@@ -49,5 +62,37 @@ class RequestGeneratorServiceImpl(RequestGeneratorService):
 
         return accountRequestData
 
+    def generateAccountLoginRequest(self, arguments):
+        print("RequestGeneratorService: login form")
 
+        if not isinstance(arguments, tuple) or len(arguments) != 2:
+            raise ValueError("Invalid request format")
 
+        accountRequestData = {
+            '__accountId': arguments[0].decode().strip(),
+            '__password': arguments[1].decode().strip(),
+        }
+
+        return accountRequestData
+
+    def generateAccountLogoutRequest(self, arguments):
+        print(f"RequestGeneratorService: logout form sessionId: {arguments}")
+
+        accountRequestData = {
+            '__accountSessionId': arguments,
+        }
+
+        return accountRequestData
+
+    def generateAccountDeleteRequest(self, arguments):
+        print("RequestGeneratorService: delete form")
+
+        accountRequestData = {
+            '__accountSessionId': arguments,
+        }
+
+        return accountRequestData
+
+    def generateProductListRequest(self, arguments):
+        print("RequestGeneratorService - generateProductListRequest()")
+        return
