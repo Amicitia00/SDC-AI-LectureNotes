@@ -1,3 +1,4 @@
+from console_ui.entity.ConsoleUiRoutingState import ConsoleUiRoutingState
 from console_ui.service.ConsoleUiService import ConsoleUiService
 from utility.keyboard.KeyboardInput import KeyboardInput
 
@@ -21,13 +22,15 @@ class ConsoleUiServiceImpl(ConsoleUiService):
         return cls.__instance
 
     def printMenu(self):
-        print("현재 상태에 따른 메시지를 출력합니다")
+        print("\033[91m현재 상태에 따른 메시지를 출력합니다\033[0m\033[92m")
+
+        print("")
         print(f"ConsoleUiService - consoleUiRepository: {self.__repository}")
 
         self.__repository.printMenu()
 
     def processUserInput(self, transmitQueue):
-        userChoice = KeyboardInput.getKeyboardIntegerInput()
+        userChoice = KeyboardInput.getKeyboardIntegerInput("원하는 번호를 입력하세요:")
         print(f"ConsoleUiService - 입력된 숫자: {userChoice}")
         # selectedRoutingState = self.__repository.findRoutingStateFromUserChoice(userChoice)
         # print(f"처리된 상태값: {selectedRoutingState}")
@@ -43,10 +46,18 @@ class ConsoleUiServiceImpl(ConsoleUiService):
             sessionId = sessionObject.get_session_id()
             print(f"ConsoleUiService - sessionObject: {sessionObject}, sessionId: {sessionId}")
 
-        if userChoice == 1 or userChoice == 5:
-            self.__repository.clearUserSession()
+        currentRoutingState = self.__repository.acquireCurrentRoutingState()
+        if currentRoutingState is ConsoleUiRoutingState.NOTHING:
+            print(f"RoutingState Nothing: {currentRoutingState}")
+            if userChoice == 1 or userChoice == 5:
+                self.__repository.clearUserSession()
 
-        transmitData = {'protocolNumber': convertedUserChoice, 'sessionId': sessionId}
+        productReadNo = self.__repository.getConsoleUiState().getCurrentReadNumber()
+        print("\033[91mConsoleUiService - productReadNo: ",productReadNo)
+        print("\033[92m", end="")
+
+        transmitData = {'protocolNumber': convertedUserChoice, 'sessionId': sessionId, 'productReadNo': productReadNo}
+        self.__repository.decisionRoutingState(convertedUserChoice)
 
         transmitQueue.put(transmitData)
 
