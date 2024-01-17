@@ -4,6 +4,7 @@ from sqlalchemy.orm import declarative_base
 from passlib.hash import pbkdf2_sha256
 # pip3 install passlib
 
+# entity에서 만들 때 넣어야 될 코드 db추적을 할 떄 사용된다 한다
 Base = declarative_base()
 
 
@@ -31,6 +32,7 @@ class Account(Base):
     def getPassword(self):
         return self.__password
 
+    # 비밀번호 변경
     def setPassword(self, password):
         self.__password = password
 
